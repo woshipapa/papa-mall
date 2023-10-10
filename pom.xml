@@ -18,6 +18,8 @@
 
     <modules>
         <module>mall-admin</module>
+        <module>mall-security</module>
+        <module>mall-common</module>
     </modules>
 
     <parent>
