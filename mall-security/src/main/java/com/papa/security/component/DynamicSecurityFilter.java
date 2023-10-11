@@ -19,6 +19,9 @@ public class DynamicSecurityFilter extends AbstractSecurityInterceptor implement
     @Resource
     private IgnoreUrlsConfig ignoreUrlsConfig;
 
+    @Resource
+    private DynamicSecurityMetadataSource dynamicSecurityMetadataSource;
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         Filter.super.init(filterConfig);
@@ -62,6 +65,6 @@ public class DynamicSecurityFilter extends AbstractSecurityInterceptor implement
 
     @Override
     public SecurityMetadataSource obtainSecurityMetadataSource() {
-        return null;
+        return dynamicSecurityMetadataSource;
     }
 }

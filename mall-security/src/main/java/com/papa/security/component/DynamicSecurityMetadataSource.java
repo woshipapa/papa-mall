@@ -22,7 +22,10 @@ public class DynamicSecurityMetadataSource implements FilterInvocationSecurityMe
     @PostConstruct
     public void loadDataSource(){configAttributeMap = dynamicSecurityService.loadDataSource();}
 
-
+    public void clearDataSource(){
+        configAttributeMap.clear();
+        configAttributeMap = null;
+    }
     @Override
     public Collection<ConfigAttribute> getAttributes(Object o) throws IllegalArgumentException {
         if(configAttributeMap == null) this.loadDataSource();
