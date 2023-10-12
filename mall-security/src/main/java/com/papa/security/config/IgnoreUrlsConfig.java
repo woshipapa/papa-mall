@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 @Getter
 @Setter
-@Component
+//@Component
 @ConfigurationProperties(prefix = "secure.ignored")
 public class IgnoreUrlsConfig {
 

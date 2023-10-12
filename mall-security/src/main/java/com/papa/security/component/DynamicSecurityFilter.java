@@ -2,6 +2,8 @@ package com.papa.security.component;
 
 import com.papa.security.config.IgnoreUrlsConfig;
 import io.swagger.models.HttpMethod;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.SecurityMetadataSource;
 import org.springframework.security.access.intercept.AbstractSecurityInterceptor;
 import org.springframework.security.access.intercept.InterceptorStatusToken;
@@ -21,6 +23,12 @@ public class DynamicSecurityFilter extends AbstractSecurityInterceptor implement
 
     @Resource
     private DynamicSecurityMetadataSource dynamicSecurityMetadataSource;
+
+
+    @Autowired
+    public void setAccessDecisionManager(DynamicAccessDecisionManager accessDecisionManager) {
+        super.setAccessDecisionManager(accessDecisionManager);
+    }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -60,7 +68,7 @@ public class DynamicSecurityFilter extends AbstractSecurityInterceptor implement
 
     @Override
     public Class<?> getSecureObjectClass() {
-        return null;
+        return FilterInvocation.class;
     }
 
     @Override
