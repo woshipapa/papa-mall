@@ -31,7 +31,7 @@ public class CommonResult<T> {
 
     public static <T> CommonResult<T> validate_failed(){return failed(ResultCode.VALIDATE_FAILED);}
 
-
+    public static <T> CommonResult<T> validate_failed(String message){return failed(message);}
     public static <T> CommonResult<T> unauthorized(T data){
         return new CommonResult<T>(ResultCode.UNAUTHORIZED.getCode(), ResultCode.UNAUTHORIZED.getMessage(),data);
     }
