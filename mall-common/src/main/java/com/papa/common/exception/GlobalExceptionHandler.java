@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
         if(result.hasErrors()){
             FieldError fieldError = result.getFieldError();
             if(fieldError!=null){
-                message = fieldError.getDefaultMessage();
+                message = fieldError.getField()+fieldError.getDefaultMessage();
             }
         }
         return CommonResult.validate_failed(message);
@@ -37,11 +37,18 @@ public class GlobalExceptionHandler {
         if(result.hasErrors()){
             FieldError fieldError = result.getFieldError();
             if(fieldError!=null){
-                message = fieldError.getDefaultMessage();
+                message = fieldError.getField()+fieldError.getDefaultMessage();
             }
         }
         return CommonResult.validate_failed(message);
+    }
 
-
+    @ExceptionHandler(value = ApiException.class)
+    @ResponseBody
+    public CommonResult handleApiException(ApiException ex){
+        if(ex.getiErrorCode()!=null){
+            return CommonResult.failed(ex.getiErrorCode());
+        }
+        return CommonResult.failed(ex.getMessage());
     }
 }
