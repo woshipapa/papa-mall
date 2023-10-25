@@ -20,6 +20,8 @@
         <module>mall-admin</module>
         <module>mall-security</module>
         <module>mall-common</module>
+        <module>mall-portal</module>
+        <module>mall-mbg</module>
     </modules>
 
     <parent>

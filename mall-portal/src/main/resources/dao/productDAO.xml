@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.papa.portal.dao.productDAO">
+    <resultMap id="promotionMap" type="com.papa.portal.domain.PromotionProduct" extends="com.papa.mbg.mapper.PmsProductMapper.BaseResultMap">
+        <collection property="skuStockList" columnPrefix="sku_" resultMap="com.papa.mbg.mapper.PmsSkuStockMapper.BaseResultMap"></collection>
+        <collection property="ladderList" columnPrefix="ladder_" resultMap="com.papa.mbg.mapper.PmsProductLadderMapper.BaseResultMap"></collection>
+        <collection property="fullReductionList"  columnPrefix="full_" resultMap="com.papa.mbg.mapper.PmsProductFullReductionMapper.BaseResultMap"></collection>
+    </resultMap>
+
+    <select id="getPromotionList" resultMap="promotionMap">
+        select
+        p.id,
+        p.`name`,
+        p.promotion_type,
+        p.gift_growth,
+        p.gift_point,
+        s.id sku_id,
+        s.price sku_price,
+        s.sku_code sku_sku_code,
+        s.promotion_price sku_promotion_price,
+        s.stock sku_stock,
+        s.lock_stock sku_lock_stock,
+        l.id ladder_id,
+        l.count ladder_count,
+        l.discount ladder_discount,
+        f.id full_id,
+        f.full_price full_full_price,
+        f.reduce_price full_reduce_price
+            from `pms_product` p
+            left join `pms_sku_stock` s on s.product_id = p.id
+            left join `pms_product_full_reduction` f on f.product_id = p.id
+            left join `pms_product_ladder` l on l.product_id = p.id
+        where p.id in
+        <foreach collection="ids" index="index" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
+</mapper>
