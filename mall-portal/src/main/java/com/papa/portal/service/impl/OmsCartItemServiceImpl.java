@@ -7,6 +7,7 @@ import com.papa.mbg.model.OmsCartItemExample;
 import com.papa.mbg.model.UmsMember;
 import com.papa.portal.domain.CartPromotionItem;
 import com.papa.portal.service.OmsCartItemService;
+import com.papa.portal.service.OmsPromotionService;
 import com.papa.portal.service.UmsMemberService;
 
 import javax.annotation.Resource;
@@ -71,11 +72,50 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
         }
         return null;
     }
+    @Resource
+    private OmsPromotionService promotionService;
     public List<CartPromotionItem> listPromotion(Long memberId,List<Long> cartIds){
         List<OmsCartItem> cartItems = list(memberId);
+        //获取到了选中的购物车中的商品
         if(CollUtil.isNotEmpty(cartItems))
             cartItems= cartItems.stream().filter(it -> cartIds.contains(it.getId())).collect(Collectors.toList());
-
+        List<CartPromotionItem> cartPromotionItems = promotionService.calCartPromotion(cartItems);
+        if(CollUtil.isNotEmpty(cartPromotionItems)) return cartPromotionItems;
         return null;
     }
+
+    /**
+     * 这里使用逻辑删除购物车中的商品
+     * @param memberId
+     * @param ids
+     * @return
+     */
+    @Override
+    public int delete(Long memberId,List<Long> ids) {
+        OmsCartItemExample example = new OmsCartItemExample();
+        example.createCriteria().andDeleteStatusEqualTo(0).andMemberIdEqualTo(memberId).andIdIn(ids);
+        OmsCartItem item = new OmsCartItem();
+        item.setDeleteStatus(1);
+        return cartItemMapper.updateByExampleSelective(item,example);
+    }
+
+    @Override
+    public int updateQuantity(Long memberId, Long cartItemId, Integer count) {
+        OmsCartItemExample example = new OmsCartItemExample();
+        example.createCriteria().andMemberIdEqualTo(memberId).andDeleteStatusEqualTo(0).andIdEqualTo(cartItemId);
+        OmsCartItem item = new OmsCartItem();
+        item.setQuantity(count);
+        return cartItemMapper.updateByExampleSelective(item,example);
+    }
+
+    @Override
+    public int clear(Long memberId) {
+        OmsCartItemExample example = new OmsCartItemExample();
+        example.createCriteria().andMemberIdEqualTo(memberId);
+        OmsCartItem item = new OmsCartItem();
+        item.setDeleteStatus(1);
+        return cartItemMapper.updateByExampleSelective(item,example);
+    }
+
+
 }

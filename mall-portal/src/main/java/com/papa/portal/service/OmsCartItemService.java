@@ -2,6 +2,7 @@ package com.papa.portal.service;
 
 import com.papa.mbg.model.OmsCartItem;
 import com.papa.mbg.model.OmsCartItemExample;
+import com.papa.portal.domain.CartPromotionItem;
 
 import java.util.List;
 
@@ -16,4 +17,13 @@ public interface OmsCartItemService {
     int add(OmsCartItem cartItem);
 
     List<OmsCartItem> list(Long memberId);
+
+    List<CartPromotionItem> listPromotion(Long memberId,List<Long> ids);
+
+    int delete(Long memberId,List<Long> ids);
+
+    int updateQuantity(Long memberId,Long cartItemId,Integer count);
+
+    int clear(Long memberId);
+
 }

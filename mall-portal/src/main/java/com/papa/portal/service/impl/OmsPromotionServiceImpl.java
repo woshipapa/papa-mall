@@ -1,5 +1,4 @@
 package com.papa.portal.service.impl;
-
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.TableMap;
 import com.papa.mbg.model.OmsCartItem;
@@ -7,7 +6,6 @@ import com.papa.mbg.model.PmsProduct;
 import com.papa.portal.dao.productDAO;
 import com.papa.portal.domain.*;
 import com.papa.portal.service.OmsPromotionService;
-
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +27,7 @@ public class OmsPromotionServiceImpl implements OmsPromotionService {
             PromotionProduct promotion = getPromotionById(productId,promotions);
             List<OmsCartItem> items = entry.getValue();
             Integer promotionType = promotion.getPromotionType();
+            //这里利用策略工厂，根据促销类型选取相应的促销策略
             PromotionStrategy promotionStrategy = PromotionFactory.getPromotionStrategy(promotionType);
             List<CartPromotionItem> cartPromotions = promotionStrategy.promotionAlgorithm(promotion,items);
             cartPromotionItems.addAll(cartPromotions);
