@@ -353,6 +353,76 @@ public class PmsProductAttributeValueExample {
             addCriterion("value not between", value1, value2, "value");
             return (Criteria) this;
         }
+
+        public Criteria andAttrNameIsNull() {
+            addCriterion("attr_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttrNameIsNotNull() {
+            addCriterion("attr_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttrNameEqualTo(String value) {
+            addCriterion("attr_name =", value, "attrName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttrNameNotEqualTo(String value) {
+            addCriterion("attr_name <>", value, "attrName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttrNameGreaterThan(String value) {
+            addCriterion("attr_name >", value, "attrName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttrNameGreaterThanOrEqualTo(String value) {
+            addCriterion("attr_name >=", value, "attrName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttrNameLessThan(String value) {
+            addCriterion("attr_name <", value, "attrName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttrNameLessThanOrEqualTo(String value) {
+            addCriterion("attr_name <=", value, "attrName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttrNameLike(String value) {
+            addCriterion("attr_name like", value, "attrName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttrNameNotLike(String value) {
+            addCriterion("attr_name not like", value, "attrName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttrNameIn(List<String> values) {
+            addCriterion("attr_name in", values, "attrName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttrNameNotIn(List<String> values) {
+            addCriterion("attr_name not in", values, "attrName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttrNameBetween(String value1, String value2) {
+            addCriterion("attr_name between", value1, value2, "attrName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttrNameNotBetween(String value1, String value2) {
+            addCriterion("attr_name not between", value1, value2, "attrName");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

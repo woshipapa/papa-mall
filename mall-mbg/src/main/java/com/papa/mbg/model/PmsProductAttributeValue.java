@@ -1,5 +1,6 @@
 package com.papa.mbg.model;
 
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 
 public class PmsProductAttributeValue implements Serializable {
@@ -10,6 +11,8 @@ public class PmsProductAttributeValue implements Serializable {
     private Long productAttributeId;
 
     private String value;
+
+    private String attrName;
 
     private static final long serialVersionUID = 1L;
 
@@ -45,6 +48,14 @@ public class PmsProductAttributeValue implements Serializable {
         this.value = value;
     }
 
+    public String getAttrName() {
+        return attrName;
+    }
+
+    public void setAttrName(String attrName) {
+        this.attrName = attrName;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -55,6 +66,7 @@ public class PmsProductAttributeValue implements Serializable {
         sb.append(", productId=").append(productId);
         sb.append(", productAttributeId=").append(productAttributeId);
         sb.append(", value=").append(value);
+        sb.append(", attrName=").append(attrName);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
@@ -75,7 +87,8 @@ public class PmsProductAttributeValue implements Serializable {
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getProductId() == null ? other.getProductId() == null : this.getProductId().equals(other.getProductId()))
             && (this.getProductAttributeId() == null ? other.getProductAttributeId() == null : this.getProductAttributeId().equals(other.getProductAttributeId()))
-            && (this.getValue() == null ? other.getValue() == null : this.getValue().equals(other.getValue()));
+            && (this.getValue() == null ? other.getValue() == null : this.getValue().equals(other.getValue()))
+            && (this.getAttrName() == null ? other.getAttrName() == null : this.getAttrName().equals(other.getAttrName()));
     }
 
     @Override
@@ -86,6 +99,7 @@ public class PmsProductAttributeValue implements Serializable {
         result = prime * result + ((getProductId() == null) ? 0 : getProductId().hashCode());
         result = prime * result + ((getProductAttributeId() == null) ? 0 : getProductAttributeId().hashCode());
         result = prime * result + ((getValue() == null) ? 0 : getValue().hashCode());
+        result = prime * result + ((getAttrName() == null) ? 0 : getAttrName().hashCode());
         return result;
     }
 }

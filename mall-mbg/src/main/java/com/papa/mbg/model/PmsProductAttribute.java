@@ -1,11 +1,10 @@
 package com.papa.mbg.model;
 
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 
 public class PmsProductAttribute implements Serializable {
     private Long id;
-
-    private Long productAttributeCategoryId;
 
     private String name;
 
@@ -27,6 +26,8 @@ public class PmsProductAttribute implements Serializable {
 
     private Integer type;
 
+    private Long productCategoryId;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -35,14 +36,6 @@ public class PmsProductAttribute implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getProductAttributeCategoryId() {
-        return productAttributeCategoryId;
-    }
-
-    public void setProductAttributeCategoryId(Long productAttributeCategoryId) {
-        this.productAttributeCategoryId = productAttributeCategoryId;
     }
 
     public String getName() {
@@ -125,6 +118,14 @@ public class PmsProductAttribute implements Serializable {
         this.type = type;
     }
 
+    public Long getProductCategoryId() {
+        return productCategoryId;
+    }
+
+    public void setProductCategoryId(Long productCategoryId) {
+        this.productCategoryId = productCategoryId;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -132,7 +133,6 @@ public class PmsProductAttribute implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", productAttributeCategoryId=").append(productAttributeCategoryId);
         sb.append(", name=").append(name);
         sb.append(", selectType=").append(selectType);
         sb.append(", inputType=").append(inputType);
@@ -143,6 +143,7 @@ public class PmsProductAttribute implements Serializable {
         sb.append(", relatedStatus=").append(relatedStatus);
         sb.append(", handAddStatus=").append(handAddStatus);
         sb.append(", type=").append(type);
+        sb.append(", productCategoryId=").append(productCategoryId);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
@@ -161,7 +162,6 @@ public class PmsProductAttribute implements Serializable {
         }
         PmsProductAttribute other = (PmsProductAttribute) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getProductAttributeCategoryId() == null ? other.getProductAttributeCategoryId() == null : this.getProductAttributeCategoryId().equals(other.getProductAttributeCategoryId()))
             && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
             && (this.getSelectType() == null ? other.getSelectType() == null : this.getSelectType().equals(other.getSelectType()))
             && (this.getInputType() == null ? other.getInputType() == null : this.getInputType().equals(other.getInputType()))
@@ -171,7 +171,8 @@ public class PmsProductAttribute implements Serializable {
             && (this.getSearchType() == null ? other.getSearchType() == null : this.getSearchType().equals(other.getSearchType()))
             && (this.getRelatedStatus() == null ? other.getRelatedStatus() == null : this.getRelatedStatus().equals(other.getRelatedStatus()))
             && (this.getHandAddStatus() == null ? other.getHandAddStatus() == null : this.getHandAddStatus().equals(other.getHandAddStatus()))
-            && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()));
+            && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
+            && (this.getProductCategoryId() == null ? other.getProductCategoryId() == null : this.getProductCategoryId().equals(other.getProductCategoryId()));
     }
 
     @Override
@@ -179,7 +180,6 @@ public class PmsProductAttribute implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-        result = prime * result + ((getProductAttributeCategoryId() == null) ? 0 : getProductAttributeCategoryId().hashCode());
         result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
         result = prime * result + ((getSelectType() == null) ? 0 : getSelectType().hashCode());
         result = prime * result + ((getInputType() == null) ? 0 : getInputType().hashCode());
@@ -190,6 +190,7 @@ public class PmsProductAttribute implements Serializable {
         result = prime * result + ((getRelatedStatus() == null) ? 0 : getRelatedStatus().hashCode());
         result = prime * result + ((getHandAddStatus() == null) ? 0 : getHandAddStatus().hashCode());
         result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
+        result = prime * result + ((getProductCategoryId() == null) ? 0 : getProductCategoryId().hashCode());
         return result;
     }
 }
