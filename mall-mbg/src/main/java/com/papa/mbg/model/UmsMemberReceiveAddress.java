@@ -1,5 +1,6 @@
 package com.papa.mbg.model;
 
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 
 public class UmsMemberReceiveAddress implements Serializable {

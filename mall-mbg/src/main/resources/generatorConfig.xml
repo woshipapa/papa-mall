@@ -63,20 +63,23 @@
 <!--        <table tableName="ums_admin_permission_relation">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
-        <table tableName="pms_product_attribute_category_relation">
+        <table tableName="%">
             <generatedKey column="id" sqlStatement="MySql" identity="true"></generatedKey>
         </table>
-        <table tableName="pms_product_attribute_value">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"></generatedKey>
-        </table>
-        <table tableName="pms_product_category_brand_relation">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"></generatedKey>
-        </table>
-        <table tableName="pms_product_attribute">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"></generatedKey>
-        </table>
-        <table tableName="pms_product_attribute_category">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"></generatedKey>
-        </table>
+<!--        <table tableName="pms_sku_stock_attribute_value">-->
+<!--            <generatedKey column="id" sqlStatement="Mysql" identity="true"></generatedKey>-->
+<!--        </table>-->
+<!--        <table tableName="pms_product_attribute_value">-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"></generatedKey>-->
+<!--        </table>-->
+<!--        <table tableName="pms_product_category_brand_relation">-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"></generatedKey>-->
+<!--        </table>-->
+<!--        <table tableName="pms_product_attribute">-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"></generatedKey>-->
+<!--        </table>-->
+<!--        <table tableName="pms_product_attribute_category">-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"></generatedKey>-->
+<!--        </table>-->
     </context>
 </generatorConfiguration>

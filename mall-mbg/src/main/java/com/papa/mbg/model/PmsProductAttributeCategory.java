@@ -12,7 +12,7 @@ public class PmsProductAttributeCategory implements Serializable {
 
     private Integer paramCount;
 
-    private Long productCategoryId;
+    private Long productCategoryId = 0L;
 
     private static final long serialVersionUID = 1L;
 

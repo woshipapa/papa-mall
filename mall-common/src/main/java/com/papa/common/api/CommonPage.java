@@ -3,6 +3,7 @@ package com.papa.common.api;
 import com.github.pagehelper.PageInfo;
 import org.springframework.data.domain.Page;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,13 +15,14 @@ public class CommonPage<T> {
     private Integer totalPage;
     private Long total;
 
-    private List<T> data;
+    private List<T> list;
     public CommonPage(){}
-    public CommonPage(Integer pageNum, Integer pageSize, Integer totalPage, Long total) {
+    public CommonPage(Integer pageNum, Integer pageSize, Integer totalPage, Long total,List list) {
         this.pageNum = pageNum;
         this.pageSize = pageSize;
         this.totalPage = totalPage;
         this.total = total;
+        this.list = list;
     }
     public static <T> CommonPage<T> restPage(List<T> list){
         CommonPage commonPage=new CommonPage();
@@ -29,7 +31,7 @@ public class CommonPage<T> {
         commonPage.setPageSize(pageInfo.getPageSize());
         commonPage.setTotalPage(pageInfo.getPages());
         commonPage.setTotal(pageInfo.getTotal());
-        commonPage.setData(list);
+        commonPage.setList(list);
         return commonPage;
     }
     public static <T> CommonPage<T> restPage(Page<T> pageInfo){
@@ -38,16 +40,16 @@ public class CommonPage<T> {
         commonPage.setPageSize(pageInfo.getSize());
         commonPage.setTotalPage(pageInfo.getTotalPages());
         commonPage.setTotal(pageInfo.getTotalElements());
-        commonPage.setData(pageInfo.getContent());
+        commonPage.setList(pageInfo.getContent());
         return commonPage;
     }
 
-    public List<T> getData() {
-        return data;
+    public List<T> getList() {
+        return list;
     }
 
-    public void setData(List<T> data) {
-        this.data = data;
+    public void setList(List<T> data) {
+        this.list = data;
     }
 
     public Integer getPageNum() {
