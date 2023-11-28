@@ -27,7 +27,7 @@ public class OmsPromotionServiceImpl implements OmsPromotionService {
             PromotionProduct promotion = getPromotionById(productId,promotions);
             List<OmsCartItem> items = entry.getValue();
             Integer promotionType = promotion.getPromotionType();
-            //这里利用策略工厂，根据促销类型选取相应的促销策略
+            //这里利用策略工厂，根据促销类型选取相应的促销策略，返回了对于这种的促销类型该使用哪一种计算方式
             PromotionStrategy promotionStrategy = PromotionFactory.getPromotionStrategy(promotionType);
             List<CartPromotionItem> cartPromotions = promotionStrategy.promotionAlgorithm(promotion,items);
             cartPromotionItems.addAll(cartPromotions);
@@ -35,12 +35,16 @@ public class OmsPromotionServiceImpl implements OmsPromotionService {
         return cartPromotionItems;
     }
 
-
+    /**
+     * 根据商品的id进行分组计算
+     * @param cartItems
+     * @return
+     */
     private Map<Long,List<OmsCartItem>> groupByProductId(List<OmsCartItem> cartItems){
         Map<Long,List<OmsCartItem>> map = new TreeMap<>();
         for(OmsCartItem item:cartItems){
             List<OmsCartItem> list = map.get(item.getProductId());
-            if(list==null){
+            if(CollUtil.isEmpty(list)){
                 list = new ArrayList<>();
                 list.add(item);
                 map.put(item.getProductId(),list);

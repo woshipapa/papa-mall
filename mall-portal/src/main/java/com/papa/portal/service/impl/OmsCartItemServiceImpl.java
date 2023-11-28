@@ -43,6 +43,11 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
 
     }
 
+    /**
+     * 查询出当前用户的购物车列表
+     * @param memberId
+     * @return
+     */
     @Override
     public List<OmsCartItem> list(Long memberId) {
         OmsCartItemExample example = new OmsCartItemExample();
@@ -76,12 +81,11 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
     private OmsPromotionService promotionService;
     public List<CartPromotionItem> listPromotion(Long memberId,List<Long> cartIds){
         List<OmsCartItem> cartItems = list(memberId);
-        //获取到了选中的购物车中的商品
+        //获取到了选中的购物车中的商品,id---->cartItem
         if(CollUtil.isNotEmpty(cartItems))
             cartItems= cartItems.stream().filter(it -> cartIds.contains(it.getId())).collect(Collectors.toList());
         List<CartPromotionItem> cartPromotionItems = promotionService.calCartPromotion(cartItems);
-        if(CollUtil.isNotEmpty(cartPromotionItems)) return cartPromotionItems;
-        return null;
+        return cartPromotionItems;
     }
 
     /**

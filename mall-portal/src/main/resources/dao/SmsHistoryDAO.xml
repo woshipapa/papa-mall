@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.papa.portal.dao.SmsHistoryDAO">
+    <resultMap id="detailMap" type="com.papa.portal.domain.SmsCouponHistoryDetail" extends="com.papa.mbg.mapper.SmsCouponHistoryMapper.BaseResultMap">
+        <association property="coupon" columnPrefix="c_" resultMap="com.papa.mbg.mapper.SmsCouponMapper.BaseResultMap"></association>
+        <collection property="productRelationList" columnPrefix="pr_" resultMap="com.papa.mbg.mapper.SmsCouponProductRelationMapper.BaseResultMap"></collection>
+        <collection property="productCategoryRelations" columnPrefix="pcr_" resultMap="com.papa.mbg.mapper.SmsCouponProductCategoryRelationMapper.BaseResultMap"></collection>
+    </resultMap>
+
+    <select id="getDetailList" resultMap="detailMap">
+        select
+            ch.*,
+            c.id c_id,
+            c.name c_name,
+            c.amount c_amount,
+            c.min_point c_min_point,
+            c.platform c_platform,
+            c.start_time c_start_time,
+            c.end_time c_end_time,
+            c.note c_note,
+            c.use_type c_use_type,
+            c.type c_type,
+            pr.id pr_id,pr.product_id pr_product_id,
+            pcr.id pcr_id,pcr.product_category_id pcr_product_category_id
+            from `sms_coupon_history` ch
+                left join `sms_coupon` c on ch.coupon_id = c.id
+                left join `sms_coupon_product_relation` pr on pr.coupon_id = c.id
+                left join `sms_coupon_product_category_relation` pcr on pcr.coupon_id = c.id
+            where ch.member_id = #{id} and ch.use_status = 0
+    </select>
+</mapper>
