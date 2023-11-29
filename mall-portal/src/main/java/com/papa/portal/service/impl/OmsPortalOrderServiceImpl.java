@@ -19,11 +19,13 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         return orderFacade.generateConfirmOrder(ids);
     }
 
+    @Override
+    public void cancelOrder(Long orderId) {
+
+    }
+
 
     public Map<String, Object> generateOrder(OrderParam orderParam){
-
-
-
-
+        return orderFacade.generateOrder(orderParam);
     }
 }

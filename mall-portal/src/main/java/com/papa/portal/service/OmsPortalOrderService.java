@@ -7,4 +7,6 @@ import java.util.List;
 public interface OmsPortalOrderService {
 
     public ConfirmOrderResult generateConfirm(List<Long> ids);
+
+    public void cancelOrder(Long orderId);
 }

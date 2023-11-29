@@ -6,4 +6,8 @@ import org.springframework.stereotype.Service;
 @Service
 public interface UmsMemberService {
     public UmsMember getCurrentMember();
+
+    public void updateIntegration(Long memberId,Integer integration);
+
+    public UmsMember getById(Long id);
 }
