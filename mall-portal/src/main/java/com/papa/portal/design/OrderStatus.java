@@ -6,7 +6,8 @@ public enum OrderStatus {
     SHIPPED(2, "已发货"),
     COMPLETED(3, "已完成"),
     CLOSED(4, "已关闭"),
-    INVALID(5, "无效订单");
+    CANCELED(5,"已取消"),
+    INVALID(6, "无效订单");
 
     OrderStatus(Integer code,String message){
         this.value = code;

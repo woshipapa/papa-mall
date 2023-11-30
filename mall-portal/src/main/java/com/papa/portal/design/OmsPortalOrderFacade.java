@@ -231,8 +231,8 @@ public class OmsPortalOrderFacade {
         order.setPayType(param.getPayType());
         //订单来源,0->pc,1->app
         order.setSourceType(1);
-        //订单状态，0->待付款，1->待发货,2->已发货，3->已完成，4->已关闭，5->无效订单
-        order.setStatus(0);
+        //订单状态，0->待付款，1->待发货,2->已发货，3->已完成，4->已关闭，5->已取消，6->无效订单
+        order.setStatus(OrderStatus.PENDING_PAYMENT.getValue());
         //订单类型，0->正常订单，1->秒杀订单
         order.setOrderType(0);
 

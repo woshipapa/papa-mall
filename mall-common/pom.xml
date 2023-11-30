@@ -25,6 +25,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>github-com-Starcounter-Jack-JSON-Patch</artifactId>
+            <version>2.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.antonsjava</groupId>
+            <artifactId>json</artifactId>
+            <version>1.17</version>
+        </dependency>
 
 
     </dependencies>
