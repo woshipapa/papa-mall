@@ -9,4 +9,5 @@ public interface PortalOrderDAO {
 
     public int updateSkuStock(@Param("list") List<OmsOrderItem> orderItemList);
 
+    public List<OmsOrderItem> getOrderItems(@Param("id") Long orderId);
 }

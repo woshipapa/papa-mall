@@ -14,4 +14,34 @@
             #{it.productSkuId}
         </foreach>
     </update>
+
+    <update id="updateSkuStock">
+        update `pms_sku_stock`
+        set `lock_stock` =
+            case id
+            <foreach collection="list" index="index" item="it" separator=",">
+                when  #{it.productSkuId} then `lock_stock` - #{it.productQuantity}
+            </foreach>
+            end,
+            `stock` =
+                case id
+                <foreach collection="list" index="index" item="it" separator=",">
+                    when #{it.productSkuId} then `stock` - #{it.productQuantity}
+                </foreach>
+            end
+        where id in
+            <foreach collection="list" index="index" item="it" separator="," open="(" close=")">
+                #{it.productSkuId}
+            </foreach>
+    </update>
+
+    <select id="getOrderItems" resultType="com.papa.mbg.model.OmsOrderItem">
+        select
+            oi.id id,
+            oi.order_id orderId,
+            oi.product_sku_id productSkuId,
+            oi.product_quantity productQuantity
+            from `oms_order` o left join `oms_order_item` oi on o.`id` = oi.`order_id`
+            where o.`id` = #{id}
+    </select>
 </mapper>

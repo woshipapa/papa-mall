@@ -63,7 +63,7 @@
 <!--        <table tableName="ums_admin_permission_relation">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
-        <table tableName="%">
+        <table tableName="oms_order_status_change">
             <generatedKey column="id" sqlStatement="MySql" identity="true"></generatedKey>
         </table>
 <!--        <table tableName="pms_sku_stock_attribute_value">-->
