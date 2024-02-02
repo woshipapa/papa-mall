@@ -1,9 +1,7 @@
 package com.papa.portal.service.impl;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.map.TableMap;
 import com.papa.mbg.model.OmsCartItem;
-import com.papa.mbg.model.PmsProduct;
-import com.papa.portal.dao.productDAO;
+import com.papa.portal.dao.ProductDAO;
 import com.papa.portal.domain.*;
 import com.papa.portal.service.OmsPromotionService;
 import javax.annotation.Resource;
@@ -16,7 +14,7 @@ import java.util.stream.Collectors;
 public class OmsPromotionServiceImpl implements OmsPromotionService {
     @Override
     public List<CartPromotionItem> calCartPromotion(List<OmsCartItem> cartItems) {
-        //根据商品得id也就是spu进行分组，相同的商品优惠是相同的
+        //根据商品的id也就是spu进行分组，相同的商品优惠是相同的
         Map<Long,List<OmsCartItem>> map = groupByProductId(cartItems);
         //得到了购物车中选中商品的优惠政策
         List<PromotionProduct> promotions = getPromotions(cartItems);
@@ -56,7 +54,7 @@ public class OmsPromotionServiceImpl implements OmsPromotionService {
     }
 
     @Resource
-    private productDAO productdao;
+    private ProductDAO productdao;
     private List<PromotionProduct> getPromotions(List<OmsCartItem> cartItems){
         List<Long> ids =cartItems.stream().map(it->it.getProductId()).collect(Collectors.toList());
         return productdao.getPromotionList(ids);

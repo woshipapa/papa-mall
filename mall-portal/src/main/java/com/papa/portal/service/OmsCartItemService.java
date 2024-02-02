@@ -2,7 +2,9 @@ package com.papa.portal.service;
 
 import com.papa.mbg.model.OmsCartItem;
 import com.papa.mbg.model.OmsCartItemExample;
+import com.papa.portal.domain.CartProductInfo;
 import com.papa.portal.domain.CartPromotionItem;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,4 +28,8 @@ public interface OmsCartItemService {
 
     int clear(Long memberId);
 
+    CartProductInfo getProductInfo(Long productId);
+
+    @Transactional
+    int updateAttr(OmsCartItem cartItem);
 }

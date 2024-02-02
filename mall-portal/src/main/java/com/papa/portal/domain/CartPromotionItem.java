@@ -6,6 +6,9 @@ import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 
+/**
+ * 带有促销信息的购物车单品
+ */
 @Data
 @EqualsAndHashCode
 public class CartPromotionItem extends OmsCartItem {

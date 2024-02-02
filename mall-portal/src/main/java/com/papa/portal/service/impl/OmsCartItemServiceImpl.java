@@ -2,17 +2,24 @@ package com.papa.portal.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.papa.mbg.mapper.OmsCartItemMapper;
-import com.papa.mbg.model.OmsCartItem;
-import com.papa.mbg.model.OmsCartItemExample;
-import com.papa.mbg.model.UmsMember;
+import com.papa.mbg.mapper.PmsProductAttributeValueMapper;
+import com.papa.mbg.mapper.PmsProductMapper;
+import com.papa.mbg.model.*;
+import com.papa.portal.dao.ProductDAO;
+import com.papa.portal.domain.CartProductInfo;
 import com.papa.portal.domain.CartPromotionItem;
+import com.papa.portal.domain.PmsSkuInfo;
 import com.papa.portal.service.OmsCartItemService;
 import com.papa.portal.service.OmsPromotionService;
 import com.papa.portal.service.UmsMemberService;
+import io.lettuce.core.protocol.CompleteableCommand;
+import org.springframework.beans.BeanUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class OmsCartItemServiceImpl implements OmsCartItemService {
@@ -22,6 +29,21 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
 
     @Resource
     private UmsMemberService memberService;
+
+    @Resource
+    private ProductDAO productDAO;
+
+    @Resource
+    private PmsProductMapper productMapper;
+
+    @Resource
+    private PmsProductAttributeValueMapper attributeValueMapper;
+
+    /**
+     * 添加商品到购物车中，要注意原来购物车中是否有相同的商品，如果有的话，是update增加数量，否则就是插入insert一个新的
+     * @param cartItem
+     * @return
+     */
     @Override
     public int add(OmsCartItem cartItem) {
         UmsMember member = memberService.getCurrentMember();
@@ -119,6 +141,59 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
         OmsCartItem item = new OmsCartItem();
         item.setDeleteStatus(1);
         return cartItemMapper.updateByExampleSelective(item,example);
+    }
+
+    @Override
+    public CartProductInfo getProductInfo(Long productId) {
+        CartProductInfo cartProductInfo = new CartProductInfo();
+        CompletableFuture<List<PmsSkuInfo>> skuInfosFuture = CompletableFuture.supplyAsync(()->{
+            return productDAO.getSkuInfoList(productId);
+        });
+        CompletableFuture<PmsProduct> productFuture = CompletableFuture.supplyAsync(()->{
+            return productMapper.selectByPrimaryKey(productId);
+        });
+        CompletableFuture<List<PmsProductAttributeValue>> valuesFuture = CompletableFuture.supplyAsync(()->{
+            PmsProductAttributeValueExample attributeValueExample = new PmsProductAttributeValueExample();
+            attributeValueExample.createCriteria().andProductIdEqualTo(productId);
+            return attributeValueMapper.selectByExample(attributeValueExample);
+        });
+        // 等待所有异步操作完成
+        CompletableFuture<Void> allFutures = CompletableFuture.allOf(skuInfosFuture, productFuture, valuesFuture);
+
+        try {
+            // 等待所有任务完成
+            allFutures.join();
+
+            // 获取每个任务的结果
+            List<PmsSkuInfo> skuInfos = skuInfosFuture.get();
+            PmsProduct product = productFuture.get();
+            List<PmsProductAttributeValue> values = valuesFuture.get();
+
+            // 组装CartProductInfo对象
+            BeanUtils.copyProperties(product,cartProductInfo);
+            cartProductInfo.setSkuInfos(skuInfos);
+            cartProductInfo.setProductAttributeValues(values);
+
+            // 返回组装好的CartProductInfo对象
+            return cartProductInfo;
+        } catch (InterruptedException | ExecutionException e) {
+            // 处理异常
+            e.printStackTrace();
+            // 根据实际情况决定是否返回null或抛出异常
+            return null;
+        }
+    }
+
+    @Override
+    public int updateAttr(OmsCartItem cartItem) {
+        OmsCartItem item = new OmsCartItem();
+        item.setDeleteStatus(1);
+        item.setId(cartItem.getId());
+        item.setModifyDate(new Date());
+        cartItemMapper.updateByPrimaryKeySelective(item);
+        cartItem.setId(null);
+        add(cartItem);
+        return 0;
     }
 
 

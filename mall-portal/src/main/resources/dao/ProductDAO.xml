@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.papa.portal.dao.productDAO">
+<mapper namespace="com.papa.portal.dao.ProductDAO">
     <resultMap id="promotionMap" type="com.papa.portal.domain.PromotionProduct" extends="com.papa.mbg.mapper.PmsProductMapper.BaseResultMap">
         <collection property="skuStockList" columnPrefix="sku_" resultMap="com.papa.mbg.mapper.PmsSkuStockMapper.BaseResultMap"></collection>
         <collection property="ladderList" columnPrefix="ladder_" resultMap="com.papa.mbg.mapper.PmsProductLadderMapper.BaseResultMap"></collection>
         <collection property="fullReductionList"  columnPrefix="full_" resultMap="com.papa.mbg.mapper.PmsProductFullReductionMapper.BaseResultMap"></collection>
     </resultMap>
-
+    <resultMap id="skuInfoMap" type="com.papa.portal.domain.PmsSkuInfo">
+        <association property="skuStock" resultMap="com.papa.mbg.mapper.PmsSkuStockMapper.BaseResultMap"></association>
+        <association property="skuStockAttributeValue" resultMap="com.papa.mbg.mapper.PmsSkuStockAttributeValueMapper.BaseResultMap"></association>
+    </resultMap>
     <select id="getPromotionList" resultMap="promotionMap">
         select
         p.id,
@@ -35,4 +38,12 @@
             #{id}
         </foreach>
     </select>
+    
+    <select id="getSkuInfoList" parameterType="java.lang.Long" resultMap="skuInfoMap">
+        select * from
+            `pms_sku_stock` ss
+                left join `pms_sku_stock_attribute_value` sav on ss.id = sav.sku_id
+        where ss.product_id = #{id}
+    </select>
+
 </mapper>
