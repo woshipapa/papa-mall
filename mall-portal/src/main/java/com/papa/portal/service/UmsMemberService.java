@@ -10,4 +10,6 @@ public interface UmsMemberService {
     public void updateIntegration(Long memberId,Integer integration);
 
     public UmsMember getById(Long id);
+
+
 }

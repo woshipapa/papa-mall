@@ -14,7 +14,7 @@ public interface OmsPortalOrderService {
 
     public Map<String,Object> generateOrder(OrderParam param);
 
-
+    public void cancelTimeOutOrder();
 
     public void pay(Long orderId);
 

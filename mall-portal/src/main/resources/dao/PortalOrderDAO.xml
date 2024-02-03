@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.papa.portal.dao.PortalOrderDAO">
+    <resultMap id="orderDetailMap" type="com.papa.portal.domain.OmsOrderDetail" extends="com.papa.mbg.mapper.OmsOrderMapper.BaseResultMap">
+        <collection property="orderItemList" resultMap="com.papa.mbg.mapper.OmsOrderItemMapper.BaseResultMap"></collection>
+    </resultMap>
     <update id="releaseSkuStockLock">
         update `pms_sku_stock`
         set `lock_stock` =
@@ -44,4 +47,33 @@
             from `oms_order` o left join `oms_order_item` oi on o.`id` = oi.`order_id`
             where o.`id` = #{id}
     </select>
+
+    <select id="getTimeOutOrders" resultMap="orderDetailMap">
+    SELECT
+    o.id,
+    o.order_sn,
+    o.coupon_id,
+    o.integration,
+    o.member_id,
+    o.use_integration,
+    ot.id               ot_id,
+    ot.product_name     ot_product_name,
+    ot.product_sku_id   ot_product_sku_id,
+    ot.product_sku_code ot_product_sku_code,
+    ot.product_quantity ot_product_quantity
+    FROM
+    oms_order o
+    LEFT JOIN oms_order_item ot ON o.id = ot.order_id
+    WHERE o.status = 0 AND o.create_time &lt; date_add(NOW(), INTERVAL -#{minute} MINUTE);
+    </select>
+
+    <update id="updateStatus">
+        update `oms_order`
+        set status = #{status}
+        where id in
+        <foreach collection="ids" item="it" open="(" close=")" separator=",">
+            #{it}
+        </foreach>
+    </update>
+
 </mapper>
