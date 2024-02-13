@@ -1,0 +1,16 @@
+caffeine:
+  cache:
+    expireAfterWritePromotion: 30
+    expireAfterWriteKill: 500
+    expireAfterWriteKillBak: 100
+    expireAfterAccess: 40
+    initialCapacity: 10
+    maximumSize: 100
+    promotionRand: 10
+    secKillRand: 400
+
+promotion:
+  allowLocalCache: true
+  allowRemoteCache: true
+redis:
+  url: redis://8.146.210.79:6379

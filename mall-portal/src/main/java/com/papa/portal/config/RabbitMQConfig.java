@@ -1,4 +1,4 @@
-package com.papa.portal.configuration;
+package com.papa.portal.config;
 
 
 import com.papa.portal.domain.QueueEnum;

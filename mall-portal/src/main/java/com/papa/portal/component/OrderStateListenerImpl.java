@@ -103,6 +103,8 @@ public class OrderStateListenerImpl {
 
 
         omsOrder.setStatus(OrderStatus.COMPLETED.getValue());
+        omsOrder.setConfirmStatus(1);
+        omsOrder.setModifyTime(new Date());
         orderMapper.updateByPrimaryKeySelective(omsOrder);
     }
 }

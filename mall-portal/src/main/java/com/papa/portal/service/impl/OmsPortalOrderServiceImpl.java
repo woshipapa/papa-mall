@@ -1,7 +1,11 @@
 package com.papa.portal.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.db.sql.Order;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.github.pagehelper.PageHelper;
+import com.papa.common.api.CommonPage;
+import com.papa.common.exception.Asserts;
+import com.papa.mbg.mapper.OmsOrderItemMapper;
 import com.papa.mbg.mapper.OmsOrderMapper;
 import com.papa.mbg.mapper.OmsOrderSettingMapper;
 import com.papa.mbg.mapper.SmsCouponHistoryMapper;
@@ -18,16 +22,15 @@ import com.papa.portal.service.UmsMemberService;
 import org.aspectj.weaver.ast.Or;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.persist.StateMachinePersister;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import javax.script.ScriptEngine;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
@@ -49,6 +52,9 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
 
     @Resource
     private OmsOrderMapper orderMapper;
+
+    @Resource
+    private OmsOrderItemMapper orderItemMapper;
 
     @Resource
     private PortalOrderDAO orderDAO;
@@ -132,8 +138,94 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         }
     }
 
+    @Override
+    public CommonPage<OmsOrderDetail> list(Integer status, Integer pageNum, Integer pageSize) {
+        status = status==-1?null:status;
+        UmsMember currMember = memberService.getCurrentMember();
+        OmsOrderExample orderExample = new OmsOrderExample();
+        OmsOrderExample.Criteria criteria = orderExample.createCriteria();
+        criteria.andDeleteStatusEqualTo(0).andMemberIdEqualTo(currMember.getId());
+        if(status!=null){
+            criteria.andStatusEqualTo(status);
+        }
+        PageHelper.startPage(pageNum,pageSize);
+        List<OmsOrder> orders = orderMapper.selectByExample(orderExample);
+        //先根据订单数量分页
+        CommonPage<OmsOrder> orderPage = CommonPage.restPage(orders);
+        CommonPage<OmsOrderDetail> resultPage = new CommonPage<>();
+        resultPage.setPageNum(orderPage.getPageNum());
+        resultPage.setPageSize(orderPage.getPageSize());
+        resultPage.setTotal(orderPage.getTotal());
+        resultPage.setTotalPage(orderPage.getTotalPage());
+        if(CollUtil.isEmpty(orders)){
+            return resultPage;
+        }
+        List<OmsOrderDetail> orderDetails = new ArrayList<>();
+        List<Long> orderIds = orders.stream().map(OmsOrder::getId).collect(Collectors.toList());;
+        OmsOrderItemExample orderItemExample = new OmsOrderItemExample();
+        orderItemExample.createCriteria().andOrderIdIn(orderIds);
+        List<OmsOrderItem> omsOrderItems = orderItemMapper.selectByExample(orderItemExample);
+        //没一个订单中会有订单项，这里加入进去
+        for(OmsOrder order : orders){
+            OmsOrderDetail orderDetail = new OmsOrderDetail();
+            BeanUtils.copyProperties(order,orderDetail);
+            Long orderId = order.getId();
+            List<OmsOrderItem> items = omsOrderItems.stream().filter(it->{return it.getOrderId().equals(orderId);}).collect(Collectors.toList());
+            orderDetail.setOrderItemList(items);
+            orderDetails.add(orderDetail);
+        }
+        resultPage.setList(orderDetails);
+        return resultPage;
+    }
+
+    public OmsOrderDetail detail(Long orderId){
+        OmsOrder order = orderMapper.selectByPrimaryKey(orderId);
+        OmsOrderDetail orderDetail = new OmsOrderDetail();
+        OmsOrderItemExample orderItemExample = new OmsOrderItemExample();
+        orderItemExample.createCriteria().andOrderIdEqualTo(orderId);
+        List<OmsOrderItem> orderItemList = orderItemMapper.selectByExample(orderItemExample);
+        orderDetail.setOrderItemList(orderItemList);
+        return orderDetail;
+
+    }
 
 
+    @Override
+    public void deleteOrder(Long orderId) {
+        UmsMember member = memberService.getCurrentMember();
+        OmsOrder order = orderMapper.selectByPrimaryKey(orderId);
+        if(!member.getId().equals(order.getMemberId())){
+            Asserts.failed("不能删除他人订单！");
+        }
+        if(order.getStatus()==OrderStatus.COMPLETED.getValue()||order.getStatus()==OrderStatus.CLOSED.getValue()){
+            order.setDeleteStatus(1);
+            orderMapper.updateByPrimaryKey(order);
+        }else{
+            Asserts.failed("只能删除已完成或已关闭的订单！");
+        }
+    }
+
+    /**
+     * 使用状态机来处理订单的确认事件
+     * @param orderId
+     */
+    @Override
+    public void confirmReceiveOrder(Long orderId) {
+        UmsMember member = memberService.getCurrentMember();
+        OmsOrder order = orderMapper.selectByPrimaryKey(orderId);
+        //校验身份
+        if(member.getId()!=order.getMemberId()){
+            Asserts.failed("不可以删除不属于自己的订单");
+        }
+        if(order.getStatus()!=OrderStatus.SHIPPED.getValue()){
+            Asserts.failed("当前当单状态不能确认收货");
+        }
+        boolean isSuccess = sendEvent(OrderStatusChangeEvent.RECEIVED, order);
+        if(!isSuccess){
+            Asserts.failed("确认收货失败");
+        }
+
+    }
 
     private synchronized boolean sendEvent(OrderStatusChangeEvent event, OmsOrder order){
         boolean result = false;

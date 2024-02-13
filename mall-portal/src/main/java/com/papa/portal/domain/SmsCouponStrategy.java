@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-
+//针对不同的优惠券使用类型
 public enum SmsCouponStrategy {
 GLOBAL(0){
     @Override
